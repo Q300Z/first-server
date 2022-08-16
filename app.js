@@ -22,22 +22,21 @@ var stuff = [
     ];
 
 app.use(express.json()) // for parsing application/json
-app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+//app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
   });
-  
 app.get('/api/stuff/get', (req, res, next) => {
   res.status(200).json(stuff);
   console.log("GET 200: /api/stuff/get")
 });
 app.post('/api/stuff/post', (req, res, next) => {
-  //stuff.push(req.body)
+  stuff.push(req.body)
   console.log(req.body)
-  res.status(201).json({message: 'Objet créé !'})
+  res.status(201).json({'message': 'Objet créé !'})
   console.log("POST 201: /api/stuff/post")
 })
 

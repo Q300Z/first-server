@@ -11,6 +11,7 @@
 </template>
 
 <script>
+	import axios from 'axios';
 	export default {
 		name: 'form-input',
 		data: () => ({
@@ -22,29 +23,25 @@
 
 		methods: {
 			validate() {
-				const requestoption = {
-					method: 'POST',
-					headers: {
-						'Content-type': 'application/json, charset="utf-8"',
-					},
-					body: JSON.stringify({
-						id: Math.floor(Math.random() * (10000 - 0)) + 0,
-						title: Math.random().toString(36).substr(2, 18),
-						description: Math.random().toString(36).substr(2, 18),
-						imageUrl:
-							'https://cdn.pixabay.com/photo/2019/06/11/18/56/camera-4267692_1280.jpg',
-						price: Math.floor(Math.random() * (10000 - 1000)) + 1000,
-						userId: Math.random().toString(36).substr(2, 18),
-					}),
-				};
-				this.$emit('objet', requestoption.body);
-				console.log(requestoption);
-				fetch('http://localhost:3000/api/stuff/post', requestoption)
-					// Converting to JSON
-					.then((response) => response.json())
-
-					// Displaying results to console
-					.then((json) => console.log(json));
+				const data = {
+					'id': Math.floor(Math.random() * (10000 - 0)) + 0,
+					'title': Math.random().toString(36).substr(2, 18),
+					'description': Math.random().toString(36).substr(9, 30),
+					'imageUrl':
+						'https://cdn.pixabay.com/photo/2019/06/11/18/56/camera-4267692_1280.jpg',
+					'price': Math.floor(Math.random() * (10000 - 1000)) + 1000,
+					'userId': Math.random().toString(36).substr(2, 18),
+				};		
+				axios
+					.post('http://localhost:3000/api/stuff/post', data)
+					.then(function (response) {
+						console.log(response);
+					})
+					.catch(function (error) {
+						console.log(error);
+					});
+				this.$emit('objet', JSON.stringify(data));
+				console.log(data);
 			},
 		},
 	};
