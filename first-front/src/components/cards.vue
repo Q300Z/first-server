@@ -5,7 +5,7 @@
         <v-card-title>{{ card.title }}</v-card-title>
         <v-card-text>{{ card.description }}</v-card-text>
         {{ card.price }}€
-        <v-card-subtitle>{{ card._id }} - {{ card.userId }}</v-card-subtitle>
+        <v-card-subtitle>{{ card.id }} - {{ card.userId }}</v-card-subtitle>
       </v-card>
     </div>
   </dir>
