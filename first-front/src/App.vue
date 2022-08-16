@@ -1,7 +1,8 @@
 <template>
 	<div id="app">
 		<Multicards :cards="this.cards" />
-		<div><Forms /></div>
+		<Forms v-on:objet="random" />
+		<p>{{ nb }}</p>
 	</div>
 </template>
 
@@ -18,12 +19,27 @@
 		data: function () {
 			return {
 				cards: [],
+				nb: 0,
 			};
 		},
 		created() {
 			fetch('http://localhost:3000/api/stuff/get')
 				.then((response) => response.json())
-				.then((data) => (this.cards = data));
+				.then((data) => ((this.cards = data), (this.nb = this.cards.length)));
+		},
+		methods: {
+			random(objets) {
+				var objet = JSON.parse(objets);
+				this.cards.push({
+					id: objet.id,
+					title: objet.title,
+					description: objet.description,
+					imageUrl: objet.imageUrl,
+					price: objet.price,
+					userId: objet.userId,
+				});
+				this.nb = this.cards.length;
+			},
 		},
 	};
 </script>
