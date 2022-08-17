@@ -1,11 +1,13 @@
 <template>
 	<div class="cards">
-		<div class="card" v-for="card in cards" :key="card.id">
-			<v-card elevation="5">
+		<div class="card" v-for="card in cards" :key="card._id">
+			<v-card elevation="5" >
 				<v-card-title>{{ card.title }}</v-card-title>
+				<v-img contain :lazy-src="card.imageUrl" max-height="150" max-width="300" :src="card.imageUrl"></v-img>
 				<v-card-text>{{ card.description }}</v-card-text>
 				{{ card.price }}€
-				<v-card-subtitle>{{ card.id }} - {{ card.userId }}</v-card-subtitle>
+				<v-card-actions><v-btn block small elevation="5" @click="click(card._id)">Commander</v-btn></v-card-actions>
+				<v-card-subtitle>{{ card._id }} - {{ card.userId }}</v-card-subtitle>
 			</v-card>
 		</div>
 	</div>
@@ -15,13 +17,22 @@
 	export default {
 		name: 'Multi-cards',
 		props: ['cards'],
+		methods: {
+		click(id) {
+			window.open('./?'+ id)
+		}
+	},
 	};
+	
 </script>
 <style>
 	.card {
-		max-width: 300px;
+		max-width: 400px;
 		min-width: 200px;
+		max-height: 400px;
+		min-height: 200px;
 		margin: 10px;
+		margin-top: 15px;
 		display: inline-block;
 	}
 	.cards {
