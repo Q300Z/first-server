@@ -20,10 +20,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/api/stuff/get:id', (req, res, next) => {
+app.get('/api/stuff/get/:id', (req, res, next) => {
   Thing.findOne({ id: req.params.id })
-    .then(thing => res.status(200).json(thing))
+    .then(thing => (res.status(200).json(thing)))
     .catch(error => res.status(404).json({ error }));
+  console.log("GET 200: /api/stuff/get/" + req.params.id)
 });
 app.get('/api/stuff/get', (req, res, next) => {
   Thing.find()
@@ -32,7 +33,7 @@ app.get('/api/stuff/get', (req, res, next) => {
   console.log("GET 200: /api/stuff/get")
 });
 app.post('/api/stuff/post', (req, res, next) => {
-  delete req.body.id;
+  delete req.body._id;
   const thing = new Thing({
     ...req.body
   })
@@ -41,6 +42,11 @@ app.post('/api/stuff/post', (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
   console.log("POST 201: /api/stuff/post")
 })
-
+app.delete('/api/stuff/suppr/:id', (req, res, next) => {
+  Thing.deleteOne({ _id: req.params.id })
+    .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
+    .catch(error => res.status(400).json({ error }));
+  console.log("DELETE 200: /api/stuff/suppr/" + req.params.id)
+});
 module.exports = app;
 

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-	import axios from 'axios';
+	
 	export default {
 		name: 'form-input',
 		data: () => ({
@@ -29,10 +29,10 @@
 		}),
 
 		methods: {
-			validate() {
+			async validate() {
 				if(this.$refs.form.validate()){
 					const data = {
-					'id': Math.random().toString(36).substr(2, 18),
+					'_id': Math.random().toString(36).substr(2, 18),
 					'title': this.title,
 					'description': this.descrip,
 					'imageUrl':
@@ -40,7 +40,7 @@
 					'price': this.price,
 					'userId': Math.random().toString(36).substr(2, 18),
 				};		
-				axios
+				await this.$axios
 					.post('http://localhost:3000/api/stuff/post', data)
 					.then(function (response) {
 						console.log(response);
@@ -48,14 +48,13 @@
 					.catch(function (error) {
 						console.log(error);
 					});
-				this.$emit('objet', JSON.stringify(data));
-				console.log(data);
+				await this.$emit('objet', JSON.stringify(data));
 				}
 				
 			},
-			random() {
+			async random() {
 					const data = {
-					'id': Math.floor(Math.random() * (10000 - 0)) + 0,
+					'_id': Math.floor(Math.random() * (10000 - 0)) + 0,
 					'title': Math.random().toString(36).substr(2, 18),
 					'description': Math.random().toString(36).substr(9, 30),
 					'imageUrl':
@@ -63,16 +62,15 @@
 					'price': Math.floor(Math.random() * (10000 - 1000)) + 1000,
 					'userId': Math.random().toString(36).substr(2, 18),
 				};		
-				axios
+				await this.$axios
 					.post('http://localhost:3000/api/stuff/post', data)
 					.then(function (response) {
-						console.log(response);
+						console.log(response.data);
 					})
 					.catch(function (error) {
 						console.log(error);
 					});
-				this.$emit('objet', JSON.stringify(data));
-				console.log(data);
+				await this.$emit('objet', JSON.stringify(data));
 				}
 				
 			},
