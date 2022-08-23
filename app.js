@@ -6,7 +6,7 @@ const app = express();
 const Thing = require('./db/models/Thing.js')
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/first-server', { useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect('mongodb://127.0.0.1:27017/first-server', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch((e) => console.log('Connexion à MongoDB échouée ! ' + e));
 
@@ -21,6 +21,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/api/stuff/get/:id', (req, res, next) => {
+  console.log(req.params.id)
   Thing.findOne({ id: req.params.id })
     .then(thing => (res.status(200).json(thing)))
     .catch(error => res.status(404).json({ error }));
@@ -29,7 +30,7 @@ app.get('/api/stuff/get/:id', (req, res, next) => {
 app.get('/api/stuff/get', (req, res, next) => {
   Thing.find()
     .then(things => res.status(200).json(things))
-    .catch(error => res.status(400).json({error}))
+    .catch(error => res.status(400).json({ error }))
   console.log("GET 200: /api/stuff/get")
 });
 app.post('/api/stuff/post', (req, res, next) => {
@@ -44,7 +45,7 @@ app.post('/api/stuff/post', (req, res, next) => {
 })
 app.delete('/api/stuff/suppr/:id', (req, res, next) => {
   Thing.deleteOne({ _id: req.params.id })
-    .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
+    .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
     .catch(error => res.status(400).json({ error }));
   console.log("DELETE 200: /api/stuff/suppr/" + req.params.id)
 });
