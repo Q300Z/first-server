@@ -9,7 +9,7 @@ module.exports = defineConfig({
   },
 
   pwa: {
-    name: 'second-front',
-    manifestCrossorigin: 'anonymous'
-  }
+    name: "second-front",
+    manifestCrossorigin: "anonymous",
+  },
 });

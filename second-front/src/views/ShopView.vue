@@ -2,11 +2,13 @@
   <div class="shop">
     <h1 class="d-flex justify-center">This is an shop page {{ countCards }}</h1>
     <div class="d-flex justify-center ma-10">
-      <v-btn stacked color="secondary" @click="refresh()"
+      <v-btn stacked color="primary" @click="refresh()"
         ><v-icon icon="mdi-reload"></v-icon>refresh</v-btn
       >
-      <v-divider vertical class="mx-4"></v-divider>
-      <OverlayForm />
+      <v-divider vertical class="mx-3"></v-divider>
+      <OverlayFormPost />
+      <v-divider vertical class="mx-3"></v-divider>
+      <OverlayFormUpdate />
       <SneakBarre />
     </div>
     <div class="ma-5">
@@ -16,13 +18,14 @@
 </template>
 <script>
 import ItemCards from "@/components/ItemCards.vue";
-import OverlayForm from "@/components/OverlayForm.vue";
+import OverlayFormPost from "@/components/OverlayFormPost.vue";
+import OverlayFormUpdate from "@/components/OverlayFormUpdate.vue";
 import SneakBarre from "@/components/SneakBarre.vue";
 import store from "@/store";
 export default {
   name: "ShopView",
   store: store,
-  components: { ItemCards, OverlayForm, SneakBarre },
+  components: { ItemCards, OverlayFormPost, OverlayFormUpdate, SneakBarre },
   computed: {
     countCards() {
       return this.$store.getters.getCount;

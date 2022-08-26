@@ -34,6 +34,9 @@ export default {
   beforeMount() {
     this.$store.dispatch("api_get_card_one", this.id);
   },
+  beforeUpdate() {
+    this.$store.dispatch("api_get_card_one", this.id);
+  },
 };
 </script>
 <style scoped></style>

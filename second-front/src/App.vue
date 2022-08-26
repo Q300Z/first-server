@@ -1,10 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar>
-      <v-btn v-for="to in routes" :key="to" :to="to.path" stacked>{{
-        to.title
-      }}</v-btn>
-    </v-app-bar>
+    <AppBarre />
     <v-main>
       <router-view />
     </v-main>
@@ -12,20 +8,24 @@
 </template>
 
 <script>
+import AppBarre from "@/components/AppBarre.vue";
 export default {
   name: "App",
+  components: { AppBarre },
   data: () => ({
-    routes: [
-      { title: "Home", path: "/" },
-      { title: "About", path: "/about" },
-      { title: "Shop", path: "/shop" },
-    ],
     //
   }),
+  beforeCreate() {
+    this.$store.dispatch("api_get_cards");
+    this.$store.dispatch("api_get_notif");
+  },
 };
 </script>
-<style scoped>
-.router {
-  align-content: center;
+<style>
+:hover.v-btn {
+  background-color: #caa1fd2a;
+}
+:hover.v-list-item--nav {
+  background-color: #caa1fd15;
 }
 </style>
