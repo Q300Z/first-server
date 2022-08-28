@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const notifSchema = mongoose.Schema({
   id: { type: String, required: true },
-  tab: { type: String, required: true },
+  tab: { type: Number, required: true },
   card: {
     title: { type: String, required: true },
     description: { type: String, required: true },

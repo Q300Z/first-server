@@ -56,6 +56,8 @@ export default {
       { title: "Home", path: "/", icon: "mdi-home" },
       { title: "About", path: "/about", icon: "mdi-information" },
       { title: "Shop", path: "/shop", icon: "mdi-cart" },
+      { title: "Admin", path: "/admin", icon: "mdi-cog" },
+      { title: "News", path: "/news", icon: "mdi-newspaper-variant" },
     ],
   }),
 

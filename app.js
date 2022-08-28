@@ -2,9 +2,12 @@ const express = require('express');
 //const mongoDB = require('./db/mongoDB');
 const mongoose = require('mongoose')
 const app = express();
+const axios = require('axios')
+//const jsdom = require("jsdom");
 
 const Thing = require('./db/models/Thing.js')
 const Notif = require('./db/models/Notif.js')
+const tabNotif = require('./db/models/tabNotif.js')
 
 mongoose.connect('mongodb://127.0.0.1:27017/first-server', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -13,6 +16,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/first-server', { useNewUrlParser: tr
 
 app.use(express.json()) // for parsing application/json
 //app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -83,13 +87,57 @@ app.post('/api/notif/post', (req, res, next) => {
 });
 
 app.delete('/api/notif/suppr/:id', (req, res, next) => {
-  Notif.deleteOne({ _id: req.params.id })
+  Notif.deleteOne({ id: req.params.id })
     .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
     .catch(error => res.status(400).json({ error }));
   console.log("DELETE 200: /api/notif/suppr/" + req.params.id)
 });
 
+/// ROUTE tabNOTIF ///
 
+app.get('/api/notif/tab/get', (req, res, next) => {
+  tabNotif.find()
+    .then(things => res.status(200).json(things))
+    .catch(error => res.status(400).json({ error }))
+  console.log("GET 200: /api/notif/get")
+});
+
+app.post('/api/notif/tab/post', (req, res, next) => {
+  const tabnotif = new tabNotif({
+    ...req.body
+  })
+  tabnotif.save()
+    .then(() => res.status(201).json({ message: 'Objet créé !' }))
+    .catch((error) => res.status(400).json({ error }));
+  console.log("POST 201: /api/notif/post")
+});
+
+app.delete('/api/notif/tab/suppr/:id', (req, res, next) => {
+  tabNotif.deleteOne({ _id: req.params.id })
+    .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
+    .catch(error => res.status(400).json({ error }));
+  console.log("DELETE 200: /api/notif/tab/suppr/" + req.params.id)
+});
+
+
+
+
+/// ROUTE RSS ///
+app.get('/api/rss/get', (req, res, next) => {
+  axios
+    .get("https://www.japscan.me/rss/")
+    .then((response) => res.status(200).format({
+      'application/xml': function () {
+        res.send(response.data)
+        //const dom = new jsdom.JSDOM(`<!DOCTYPE html><p>Hello world</p>`);
+        //dom.window.document.querySelector("p").textContent; // 'Hello world'
+      }
+    }))
+    .catch((e) => console.log(e));
+
+  console.log("GET 200: /api/rss/get")
+
+});
 
 
 

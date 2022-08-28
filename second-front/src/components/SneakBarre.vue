@@ -5,7 +5,7 @@
       :color="typeSneak"
       location="bottom right"
     >
-      <v-icon icon="mdi-alert-circle-outline" size="x-large" start></v-icon>
+      <v-icon :icon="iconSneak" size="x-large" start></v-icon>
       {{ messageSneak }}
 
       <template #actions>
@@ -20,7 +20,12 @@
 import vuex from "vuex";
 export default {
   computed: {
-    ...vuex.mapGetters(["messageSneak", "activeSneak", "typeSneak"]),
+    ...vuex.mapGetters([
+      "messageSneak",
+      "activeSneak",
+      "typeSneak",
+      "iconSneak",
+    ]),
   },
   methods: {
     close() {

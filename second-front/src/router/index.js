@@ -27,6 +27,16 @@ const routes = [
     component: () => import("../views/ItemView.vue"),
     props: true,
   },
+  {
+    path: "/admin",
+    name: "admin",
+    component: () => import("../views/AdminView.vue"),
+  },
+  {
+    path: "/news",
+    name: "news",
+    component: () => import("../views/NewsView.vue"),
+  },
 ];
 
 const router = createRouter({

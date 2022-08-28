@@ -13,7 +13,8 @@ export default createStore({
     iconSneak: "mdi-alert-circle-outline",
     //NOTIF STATE//
     notif: [],
-    tabsNotif: [{ id: 0, title: "commande" }],
+    tabsNotif: [],
+    rss: [],
   },
   getters: {
     //CARD GETTERS//
@@ -65,6 +66,11 @@ export default createStore({
     activeSneak(state, bool) {
       if (typeof bool === "boolean") {
         state.activeSneak = bool;
+        if (state.activeSneak == true) {
+          window.setTimeout(function () {
+            state.activeSneak = false;
+          }, 2000);
+        }
       } else {
         console.error("activeSneak : need Boolean");
       }
@@ -85,13 +91,13 @@ export default createStore({
     },
     iconSneak(state, icon) {
       if (typeof icon === "string") {
-        //console.log(icon);
         state.iconSneak = icon;
+        //console.log(state.iconSneak);
       } else {
         console.error("iconSneak : need String");
       }
     },
-    //NOTIF MUTATION//
+    // NOTIF MUTATION //
     addNotif(state, notif) {
       if (!notif.id) {
         for (let obj in notif) {
@@ -104,11 +110,23 @@ export default createStore({
     removeNotif(state, notif) {
       state.notif = state.notif.filter((i) => i !== notif);
     },
+    // tabNOTIF MUTATION //
     addTabNotif(state, tab) {
-      state.tabsNotif.push(tab);
+      console.log(tab);
+      if (!tab.id) {
+        for (let obj in tab) {
+          state.tabsNotif.push(tab[obj]);
+        }
+      } else {
+        state.tabsNotif.push(tab);
+      }
     },
     removeTabNotif(state, tab) {
       state.tabsNotif = state.tabsNotif.filter((i) => i !== tab);
+    },
+    // RSS //
+    addRss(state, rss) {
+      state.rss = rss;
     },
   },
   actions: {
@@ -128,8 +146,8 @@ export default createStore({
     /// SNEAK ACTIONS///
     sneak(state, sneak) {
       //console.log(sneak);
-      if (sneak.bool === false) {
-        state.commit("activeSneak", sneak.bool);
+      if (sneak === false) {
+        state.commit("activeSneak", sneak);
       } else {
         state.commit("activeSneak", sneak.bool);
         state.commit("messageSneak", sneak.text);
@@ -140,9 +158,9 @@ export default createStore({
 
     /// API ACTIONS///
     // CARDS //
-    api_get_cards(state) {
+    async api_get_cards(state) {
       //const api_url = "http://localhost:3000";
-      axios
+      await axios
         .get("/api/stuff/get")
         .then((result) => state.commit("add_cards", result.data))
         .catch((error) => {
@@ -156,8 +174,8 @@ export default createStore({
           console.error(error);
         });
     },
-    api_get_card_one(state, id) {
-      axios
+    async api_get_card_one(state, id) {
+      await axios
         .get("/api/stuff/get/" + id)
         .then((result) => state.commit("add_current_card", result.data))
         .catch((error) => {
@@ -171,11 +189,11 @@ export default createStore({
           console.error(error);
         });
     },
-    api_remove_card(state, card) {
+    async api_remove_card(state, card) {
       this.commit("remove", card);
-      axios
+      await axios
         .delete("/api/stuff/suppr/" + card._id)
-        .then((result) => console.log(result))
+        .then((result) => console.log(result.statusText))
         .catch((error) => {
           const sneak = {
             bool: true,
@@ -187,8 +205,8 @@ export default createStore({
           console.error(error);
         });
     },
-    api_add_card(state, card) {
-      axios
+    async api_add_card(state, card) {
+      await axios
         .post("/api/stuff/post", card)
         .then(function (response) {
           console.log(response.statusText);
@@ -205,9 +223,9 @@ export default createStore({
           console.log(error);
         });
     },
-    api_update_card(state, card) {
+    async api_update_card(state, card) {
       //console.log(card);
-      axios
+      await axios
         .put("/api/stuff/update/" + card._id, card)
         .then((result) => console.log(result.statusText))
         .catch((error) => {
@@ -222,8 +240,8 @@ export default createStore({
         });
     },
     // NOTIF //
-    api_get_notif(state) {
-      axios
+    async api_get_notif(state) {
+      await axios
         .get("/api/notif/get")
         .then((result) => state.commit("addNotif", result.data))
         .catch((error) => {
@@ -237,10 +255,11 @@ export default createStore({
           console.error(error);
         });
     },
-    api_remove_notif(state, notif) {
+    async api_remove_notif(state, notif) {
+      //console.log(notif);
       this.commit("removeNotif", notif);
-      axios
-        .delete("/api/notif/suppr/" + notif._id)
+      await axios
+        .delete("/api/notif/suppr/" + notif.id)
         .then((result) => console.log(result.statusText))
         .catch((error) => {
           const sneak = {
@@ -253,8 +272,8 @@ export default createStore({
           console.error(error);
         });
     },
-    api_add_notif(state, notif) {
-      axios
+    async api_add_notif(state, notif) {
+      await axios
         .post("/api/notif/post", notif)
         .then(function (response) {
           console.log(response.statusText);
@@ -272,10 +291,10 @@ export default createStore({
         });
     },
     // NOTIF: TAB //
-    api_get_tab_notif(state) {
-      axios
-        .get("/api/notif/get")
-        .then((result) => state.commit("addNotif", result.data))
+    async api_get_tab_notif(state) {
+      await axios
+        .get("/api/notif/tab/get")
+        .then((result) => state.commit("addTabNotif", result.data))
         .catch((error) => {
           const sneak = {
             bool: true,
@@ -287,10 +306,10 @@ export default createStore({
           console.error(error);
         });
     },
-    api_remove_tab_notif(state, notif) {
-      this.commit("removeNotif", notif);
-      axios
-        .delete("/api/notif/suppr/" + notif.id)
+    async api_remove_tab_notif(state, tab) {
+      this.commit("removeTabNotif", tab);
+      await axios
+        .delete("/api/notif/tab/suppr/" + tab._id)
         .then((result) => console.log(result.statusText))
         .catch((error) => {
           const sneak = {
@@ -303,14 +322,30 @@ export default createStore({
           console.error(error);
         });
     },
-    api_add_tab_notif(state, notif) {
-      axios
-        .post("/api/notif/post", notif)
+    async api_add_tab_notif(state, tab) {
+      await axios
+        .post("/api/notif/tab/post", tab)
         .then(function (response) {
           console.log(response.statusText);
-          state.commit("addNotif", notif);
+          state.commit("addTabNotif", tab);
         })
         .catch(function (error) {
+          const sneak = {
+            bool: true,
+            text: "Une erreur s'est produit !",
+            type: "error",
+            icon: "mdi-alert",
+          };
+          state.dispatch("sneak", sneak);
+          console.error(error);
+        });
+    },
+    // RSS //
+    async api_get_rss(state) {
+      await axios
+        .get("/api/rss/get")
+        .then((result) => state.commit("addRss", result.data))
+        .catch((error) => {
           const sneak = {
             bool: true,
             text: "Une erreur s'est produit !",

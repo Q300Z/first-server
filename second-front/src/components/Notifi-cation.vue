@@ -9,12 +9,15 @@
       <template #activator="{ props }">
         <v-btn v-bind="props" stacked>
           <v-badge
+            v-if="$store.state.notif.length"
             :content="$store.state.notif.length"
             max="100"
             color="primary"
+            floating
           >
-            <v-icon>mdi-bell</v-icon>
+            <v-icon>mdi-bell-ring</v-icon>
           </v-badge>
+          <v-icon v-if="$store.state.notif.length == 0">mdi-bell</v-icon>
         </v-btn>
       </template>
 
@@ -29,14 +32,12 @@
 
         <v-window v-model="tabs">
           <v-window-item
-            v-for="tab in getTabNotif"
-            :key="tab.id"
-            :value="tab.id"
+            v-for="notif in getNotif.slice(0, 10)"
+            :key="notif._id"
+            :value="notif.tab"
           >
             <v-list avatar>
               <v-list-item
-                v-for="notif in getNotif.slice(0, 10)"
-                :key="notif.id"
                 :prepend-avatar="notif.card.imageUrl"
                 width="400"
                 height="50"
@@ -82,6 +83,13 @@ export default {
   },
   methods: {
     remove(notif) {
+      const sneak = {
+        bool: true,
+        text: "Delete successfully !",
+        type: "success",
+        icon: "mdi-check-circle",
+      };
+      this.$store.dispatch("sneak", sneak);
       this.$store.dispatch("api_remove_notif", notif);
     },
     go(notif) {

@@ -103,7 +103,12 @@ export default {
           userId: Math.random().toString(36).substr(2, 18),
         };
         this.$store.dispatch("api_add_card", data);
-        const sneak = { bool: true, text: "Success !", type: "success" };
+        const sneak = {
+          bool: true,
+          text: "Success !",
+          type: "success",
+          icon: "mdi-check-circle",
+        };
         this.$store.dispatch("sneak", sneak);
         this.dialog = false;
       }
