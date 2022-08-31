@@ -19,8 +19,9 @@ export default {
     this.$store.dispatch("api_get_cards");
     this.$store.dispatch("api_get_notif");
     this.$store.dispatch("api_get_tab_notif");
-    //this.$store.dispatch("api_get_rss");
-    //console.log(this.$store.getters.getNotif);
+    this.$store.dispatch("api_get_rss");
+    this.$store.dispatch("api_get_flux");
+    //console.log(this.$store.getters.getFluxRss);
   },
 };
 </script>

@@ -15,6 +15,7 @@ export default createStore({
     notif: [],
     tabsNotif: [],
     rss: [],
+    fluxRss: [],
   },
   getters: {
     //CARD GETTERS//
@@ -46,6 +47,13 @@ export default createStore({
     },
     getTabNotif(state) {
       return state.tabsNotif;
+    },
+    // RSS //
+    getRss(state) {
+      return state.rss;
+    },
+    getFluxRss(state) {
+      return state.fluxRss;
     },
   },
   mutations: {
@@ -112,9 +120,10 @@ export default createStore({
     },
     // tabNOTIF MUTATION //
     addTabNotif(state, tab) {
-      console.log(tab);
-      if (!tab.id) {
+      //console.log(typeof tab.id === "number");
+      if (typeof tab.id !== "number") {
         for (let obj in tab) {
+          //console.log("here");
           state.tabsNotif.push(tab[obj]);
         }
       } else {
@@ -127,6 +136,20 @@ export default createStore({
     // RSS //
     addRss(state, rss) {
       state.rss = rss;
+    },
+    addFluxRss(state, flux) {
+      //console.log(flux.length);
+      if (typeof flux.length === "number") {
+        for (let obj in flux) {
+          //console.log(obj);
+          state.fluxRss.push(flux[obj]);
+        }
+      } else {
+        state.fluxRss.push(flux);
+      }
+    },
+    removeFluxRss(state, flux) {
+      state.fluxRss = state.fluxRss.filter((i) => i !== flux);
     },
   },
   actions: {
@@ -323,11 +346,11 @@ export default createStore({
         });
     },
     async api_add_tab_notif(state, tab) {
+      this.commit("addTabNotif", tab);
       await axios
         .post("/api/notif/tab/post", tab)
         .then(function (response) {
           console.log(response.statusText);
-          state.commit("addTabNotif", tab);
         })
         .catch(function (error) {
           const sneak = {
@@ -345,6 +368,70 @@ export default createStore({
       await axios
         .get("/api/rss/get")
         .then((result) => state.commit("addRss", result.data))
+        .catch((error) => {
+          const sneak = {
+            bool: true,
+            text: "Une erreur s'est produit !",
+            type: "error",
+            icon: "mdi-alert",
+          };
+          state.dispatch("sneak", sneak);
+          console.error(error);
+        });
+    },
+    async api_get_flux(state) {
+      await axios
+        .get("/api/rss/get/flux")
+        .then((result) => state.commit("addFluxRss", result.data))
+        .catch((error) => {
+          const sneak = {
+            bool: true,
+            text: "Une erreur s'est produit !",
+            type: "error",
+            icon: "mdi-alert",
+          };
+          state.dispatch("sneak", sneak);
+          console.error(error);
+        });
+    },
+    async api_delete_flux(state, flux) {
+      this.commit("removeFluxRss", flux);
+      await axios
+        .delete("/api/rss/suppr/flux/" + flux._id)
+        .then((result) => console.log(result.statusText))
+        .catch((error) => {
+          const sneak = {
+            bool: true,
+            text: "Une erreur s'est produit !",
+            type: "error",
+            icon: "mdi-alert",
+          };
+          state.dispatch("sneak", sneak);
+          console.error(error);
+        });
+    },
+    async api_post_flux(state, flux) {
+      await axios
+        .post("/api/rss/post/flux", flux)
+        .then(function (response) {
+          console.log(response.statusText);
+          state.commit("addFluxRss", flux);
+        })
+        .catch((error) => {
+          const sneak = {
+            bool: true,
+            text: "Une erreur s'est produit !",
+            type: "error",
+            icon: "mdi-alert",
+          };
+          state.dispatch("sneak", sneak);
+          console.error(error);
+        });
+    },
+    async api_put_flux(state, flux) {
+      await axios
+        .put("/api/rss/update/flux" + flux._id, flux)
+        .then((result) => console.log(result.statusText))
         .catch((error) => {
           const sneak = {
             bool: true,

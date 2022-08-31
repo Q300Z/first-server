@@ -11,7 +11,6 @@
           <v-badge
             v-if="$store.state.notif.length"
             :content="$store.state.notif.length"
-            max="100"
             color="primary"
             floating
           >
@@ -76,7 +75,7 @@ import vuex from "vuex";
 export default {
   data: () => ({
     menu: false,
-    tabs: 0,
+    tabs: null,
   }),
   computed: {
     ...vuex.mapGetters(["getNotif", "getTabNotif"]),
