@@ -21,8 +21,8 @@
   </div>
 </template>
 <script>
-import AddTabs from "../components/AddTabs.vue";
-import AddFlux from "../components/AddFlux.vue";
+import AddTabs from "../components/admin/AddTabs.vue";
+import AddFlux from "../components/admin/AddFlux.vue";
 export default {
   components: { AddTabs, AddFlux },
   data: () => ({

@@ -136,6 +136,17 @@ export default createStore({
     // RSS //
     addRss(state, rss) {
       state.rss = rss;
+      /* for (let f in state.fluxRss) {
+        var flux = state.fluxRss[f]._id;
+        var set = {
+          [flux]: rss.filter((el) => el.flux == state.fluxRss[f]._id),
+        };
+        var num = { [f]: set };
+        state.rss.push(num);
+        console.log(set);
+      } */
+
+      //console.log(state.rss);
     },
     addFluxRss(state, flux) {
       //console.log(flux.length);

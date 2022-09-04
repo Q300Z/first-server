@@ -36,11 +36,8 @@
             :value="notif.tab"
           >
             <v-list avatar>
-              <v-list-item
-                :prepend-avatar="notif.card.imageUrl"
-                width="400"
-                height="50"
-              >
+              <v-list-item width="400" height="50">
+                <!-- :prepend-avatar="notif.card.imageUrl" -->
                 <template #prepend>
                   <div>
                     <v-list-item-title>{{

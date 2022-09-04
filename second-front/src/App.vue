@@ -2,16 +2,18 @@
   <v-app>
     <AppBarre />
     <v-main>
+      <Snackbarre />
       <router-view />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import AppBarre from "@/components/AppBarre.vue";
+import AppBarre from "@/components/global/AppBarre.vue";
+import Snackbarre from "@/components/global/SneakBarre.vue";
 export default {
   name: "App",
-  components: { AppBarre },
+  components: { AppBarre, Snackbarre },
   data: () => ({
     //
   }),

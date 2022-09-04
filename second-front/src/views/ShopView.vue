@@ -17,10 +17,10 @@
   </div>
 </template>
 <script>
-import ItemCards from "@/components/ItemCards.vue";
-import OverlayFormPost from "@/components/OverlayFormPost.vue";
-import OverlayFormUpdate from "@/components/OverlayFormUpdate.vue";
-import SneakBarre from "@/components/SneakBarre.vue";
+import ItemCards from "@/components/cards/ItemCards.vue";
+import OverlayFormPost from "@/components/cards/OverlayFormPost.vue";
+import OverlayFormUpdate from "@/components/cards/OverlayFormUpdate.vue";
+import SneakBarre from "@/components/global/SneakBarre.vue";
 import store from "@/store";
 export default {
   name: "ShopView",

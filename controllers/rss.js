@@ -16,7 +16,7 @@ exports.getAllRss = async (req, res, next) => {
                         const dateUTC = new Date().toUTCString()
                         var rss = JSON.parse(rss)
                         await itemRss.find()
-                            .then(items => {
+                            .then(async items => {
                                 for (r in rss.rss.channel.item) {
                                     if (items.find(el => el.title == rss.rss.channel.item[r].title) === undefined) {
                                         console.log(`${rss.rss.channel.item[r].title} ajouté !`)
@@ -27,14 +27,14 @@ exports.getAllRss = async (req, res, next) => {
                                             pubDate: rss.rss.channel.item[r].pubDate,
                                             creaDate: dateUTC,
                                             read: false,
-                                            flux: flux[f].title
+                                            flux: flux[f]._id
                                         });
-                                        item.save()
+                                        await item.save()
                                     }
                                 }
                             })
-                            .catch(error => console.log(error))
-                        fluxRss.updateOne({ _id: flux[f]._id }, { upadateDate: dateUTC }).then().catch(error => console.log(error))
+                            .catch(error => res.status(400).json({ error }))
+                        await fluxRss.updateOne({ _id: flux[f]._id }, { upadateDate: dateUTC }).then().catch(error => res.status(400).json({ error }))
                     }
                 }))
                 .catch((e) => console.log(e));
@@ -42,21 +42,27 @@ exports.getAllRss = async (req, res, next) => {
         }
         await itemRss.find()
             .then(items => res.send(items))
-            .catch(error => console.log(error))
-    }).catch(error => console.log(error))
+            .catch(error => res.status(400).json({ error }))
+    }).catch(error => res.status(400).json({ error }))
 }
 
 exports.getFlux = (req, res, next) => {
     console.log("GET 200: /api/rss/get/flux")
     fluxRss.find()
         .then(flux => res.status(200).json(flux))
-        .catch(error => console.log(error))
+        .catch(error => res.status(400).json({ error }))
 }
 
-exports.deleteFlux = (req, res, next) => {
-    fluxRss.deleteOne({ _id: req.params.id })
-        .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
-        .catch(error => res.status(400).json({ error }));
+exports.deleteFlux = async (req, res, next) => {
+    await fluxRss.findOne({ _id: req.params.id }).then(async flux => {
+        await itemRss.deleteMany({ flux: flux._id })
+            .then(async () => {
+                fluxRss.deleteOne({ _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
+                    .catch(error => res.status(400).json({ deleteOne: error }));
+            })
+            .catch(error => res.status(400).json({ deleteMany: error }))
+    }).catch(error => res.status(400).json({ fincOne: error }))
     console.log("DELETE 200: /api/rss/suppr/flux" + req.params.id)
 }
 
@@ -84,31 +90,33 @@ exports.createFlux = async (req, res, next) => {
                     upadateDate: dateUTC
                 })
                 flux.save()
-                    .then(() => res.status(201).json({ message: 'Objet créé !' }))
+                    .then()
                     .catch((error) => res.status(400).json({ error }));
-
-                await itemRss.find()
-                    .then(items => {
-                        for (r in rss.rss.channel.item) {
-                            if (items.find(el => el.title == rss.rss.channel.item[r].title) === undefined) {
-                                console.log(`${rss.rss.channel.item[r].title} ajouté !`)
-                                const item = new itemRss({
-                                    title: rss.rss.channel.item[r].title,
-                                    description: rss.rss.channel.item[r].description,
-                                    link: rss.rss.channel.link + rss.rss.channel.item[r].link,
-                                    pubDate: rss.rss.channel.item[r].pubDate,
-                                    creaDate: dateUTC,
-                                    read: false,
-                                    flux: req.body.title
-                                });
-                                item.save()
+                await fluxRss.findOne({ title: req.body.title }).then(async flux => {
+                    await itemRss.find()
+                        .then(items => {
+                            for (r in rss.rss.channel.item) {
+                                if (items.find(el => el.title == rss.rss.channel.item[r].title) === undefined) {
+                                    console.log(`${rss.rss.channel.item[r].title} ajouté !`)
+                                    const item = new itemRss({
+                                        title: rss.rss.channel.item[r].title,
+                                        description: rss.rss.channel.item[r].description,
+                                        link: rss.rss.channel.link + rss.rss.channel.item[r].link,
+                                        pubDate: rss.rss.channel.item[r].pubDate,
+                                        creaDate: dateUTC,
+                                        read: false,
+                                        flux: flux._id
+                                    });
+                                    item.save()
+                                }
                             }
-                        }
-                    })
-                    .catch(error => console.log(error))
+                        })
+                        .catch(error => res.status(400).json({ error }))
+                }).catch(error => res.status(400).json({ error }))
 
+                res.status(201).json({ message: 'Objet créé !' })
                 console.log("POST 201: /api/rss/post/flux")
-            }
-        })).catch(error => console.log(error))
+            },
+        })).catch(error => res.status(400).json({ error }))
 
 }

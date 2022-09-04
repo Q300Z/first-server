@@ -33,9 +33,17 @@ const routes = [
     component: () => import("../views/AdminView.vue"),
   },
   {
-    path: "/news",
+    path: "/news/",
     name: "news",
     component: () => import("../views/NewsView.vue"),
+    children: [
+      {
+        name: "flux",
+        path: ":id",
+        component: () => import("../components/news/ListNews.vue"),
+        props: true,
+      },
+    ],
   },
 ];
 

@@ -46,7 +46,7 @@
   </div>
 </template>
 <script>
-import Notif from "@/components/Notifi-cation.vue";
+import Notif from "@/components/global/Notifi-cation.vue";
 export default {
   components: { Notif },
   data: () => ({
