@@ -6,6 +6,8 @@ const rssCtrl = require('../controllers/rss')
 
 
 router.get('/get', rssCtrl.getAllRss);
+router.put('/put/:id', rssCtrl.modifyRss);
+
 router.get('/get/flux', rssCtrl.getFlux)
 router.delete('/suppr/flux/:id', rssCtrl.deleteFlux)
 router.post('/post/flux', rssCtrl.createFlux)

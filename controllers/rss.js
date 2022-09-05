@@ -45,6 +45,16 @@ exports.getAllRss = async (req, res, next) => {
             .catch(error => res.status(400).json({ error }))
     }).catch(error => res.status(400).json({ error }))
 }
+exports.modifyRss = async (req, res, next) => {
+    const dateUTC = new Date().toUTCString()
+    item = req.body
+    item = { ...item, readDate: dateUTC }
+    console.log(item)
+    itemRss.updateOne({ _id: req.params.id }, { ...item, _id: req.params.id })
+        .then(() => res.status(200).json({ message: 'Object updated !' }))
+        .catch(error => res.status(400).json({ error }));
+    console.log("POST 200: /api/rss/update/" + req.params.id)
+}
 
 exports.getFlux = (req, res, next) => {
     console.log("GET 200: /api/rss/get/flux")

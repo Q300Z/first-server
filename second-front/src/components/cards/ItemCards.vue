@@ -7,7 +7,7 @@
         :total-visible="1"
       ></v-pagination>
     </div>
-    <div class="compo justify-center overflow-y-auto">
+    <div class="compo">
       <v-row>
         <v-col
           v-for="(card, index) in getCards.slice(
@@ -33,7 +33,7 @@
               threshold: 0,
             }"
           > -->
-            <v-card elevation="10" class="pa-5">
+            <v-card elevation="10" class="pa-5 justify-center overflow-auto">
               #{{ index }}
               <v-card-title>{{ card.title }}</v-card-title>
               <v-card-subtitle>ID: {{ card._id }} </v-card-subtitle>

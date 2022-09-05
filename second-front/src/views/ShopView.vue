@@ -1,5 +1,5 @@
 <template>
-  <div class="shop">
+  <div class="shop" id="start">
     <h1 class="d-flex justify-center">This is an shop page {{ countCards }}</h1>
     <div class="d-flex justify-center ma-10">
       <v-btn stacked color="primary" @click="refresh()"

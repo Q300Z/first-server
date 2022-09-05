@@ -390,6 +390,22 @@ export default createStore({
           console.error(error);
         });
     },
+    async api_put_rss(state, rss) {
+      //console.log(rss);
+      await axios
+        .put("/api/rss/put/" + rss._id, rss)
+        .then((result) => console.log(result.statusText))
+        .catch((error) => {
+          const sneak = {
+            bool: true,
+            text: "Une erreur s'est produit !",
+            type: "error",
+            icon: "mdi-alert",
+          };
+          state.dispatch("sneak", sneak);
+          console.error(error);
+        });
+    },
     async api_get_flux(state) {
       await axios
         .get("/api/rss/get/flux")
