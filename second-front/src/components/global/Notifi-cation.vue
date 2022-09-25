@@ -9,14 +9,14 @@
       <template #activator="{ props }">
         <v-btn v-bind="props" stacked>
           <v-badge
-            v-if="$store.state.notif.length"
-            :content="$store.state.notif.length"
+            v-if="$store.state.notif.notif.length"
+            :content="$store.state.notif.notif.length"
             color="primary"
             floating
           >
             <v-icon>mdi-bell-ring</v-icon>
           </v-badge>
-          <v-icon v-if="$store.state.notif.length == 0">mdi-bell</v-icon>
+          <v-icon v-if="$store.state.notif.notif.length == 0">mdi-bell</v-icon>
         </v-btn>
       </template>
 
@@ -75,7 +75,7 @@ export default {
     tabs: null,
   }),
   computed: {
-    ...vuex.mapGetters(["getNotif", "getTabNotif"]),
+    ...vuex.mapGetters("notif", ["getNotif", "getTabNotif"]),
   },
   methods: {
     remove(notif) {
@@ -85,8 +85,8 @@ export default {
         type: "success",
         icon: "mdi-check-circle",
       };
-      this.$store.dispatch("sneak", sneak);
-      this.$store.dispatch("api_remove_notif", notif);
+      this.$store.dispatch("sneak/sneak", sneak);
+      this.$store.dispatch("notif/api_remove_notif", notif);
     },
     go(notif) {
       this.$router.push("/shop/item/" + notif.id);

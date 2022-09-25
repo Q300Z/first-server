@@ -6,6 +6,7 @@ const itemRss = require('../db/models/itemRss');
 
 exports.getAllRss = async (req, res, next) => {
     console.log("GET 200: /api/rss/get")
+
     await fluxRss.find().then(async flux => {
         for (f in flux) {
             await axios
@@ -15,10 +16,11 @@ exports.getAllRss = async (req, res, next) => {
                         var rss = parser.toJson(response.data)
                         const dateUTC = new Date().toUTCString()
                         var rss = JSON.parse(rss)
+                        var fluxID = flux[f]._id
                         await itemRss.find()
                             .then(async items => {
                                 for (r in rss.rss.channel.item) {
-                                    if (items.find(el => el.title == rss.rss.channel.item[r].title) === undefined) {
+                                    if (items.find(el => el.title == rss.rss.channel.item[r].title && el.link == rss.rss.channel.link + rss.rss.channel.item[r].link) === undefined) {
                                         console.log(`${rss.rss.channel.item[r].title} ajouté !`)
                                         const item = new itemRss({
                                             title: rss.rss.channel.item[r].title,
@@ -27,14 +29,14 @@ exports.getAllRss = async (req, res, next) => {
                                             pubDate: rss.rss.channel.item[r].pubDate,
                                             creaDate: dateUTC,
                                             read: false,
-                                            flux: flux[f]._id
+                                            flux: fluxID
                                         });
                                         await item.save()
                                     }
                                 }
                             })
                             .catch(error => res.status(400).json({ error }))
-                        await fluxRss.updateOne({ _id: flux[f]._id }, { upadateDate: dateUTC }).then().catch(error => res.status(400).json({ error }))
+                        await fluxRss.updateOne({ _id: fluxID }, { upadateDate: dateUTC }).then().catch(error => res.status(400).json({ error }))
                     }
                 }))
                 .catch((e) => console.log(e));
@@ -45,11 +47,12 @@ exports.getAllRss = async (req, res, next) => {
             .catch(error => res.status(400).json({ error }))
     }).catch(error => res.status(400).json({ error }))
 }
+
 exports.modifyRss = async (req, res, next) => {
     const dateUTC = new Date().toUTCString()
     item = req.body
     item = { ...item, readDate: dateUTC }
-    console.log(item)
+    //console.log(item)
     itemRss.updateOne({ _id: req.params.id }, { ...item, _id: req.params.id })
         .then(() => res.status(200).json({ message: 'Object updated !' }))
         .catch(error => res.status(400).json({ error }));
@@ -69,10 +72,10 @@ exports.deleteFlux = async (req, res, next) => {
             .then(async () => {
                 fluxRss.deleteOne({ _id: req.params.id })
                     .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
-                    .catch(error => res.status(400).json({ deleteOne: error }));
+                    .catch(error => res.status(400).json({ error }));
             })
             .catch(error => res.status(400).json({ deleteMany: error }))
-    }).catch(error => res.status(400).json({ fincOne: error }))
+    }).catch(error => res.status(400).json({ error }))
     console.log("DELETE 200: /api/rss/suppr/flux" + req.params.id)
 }
 
@@ -86,7 +89,7 @@ exports.modifyFlux = (req, res, next) => {
 exports.createFlux = async (req, res, next) => {
     await axios
         .get(req.body.link)
-        .then((response) => res.status(200).format({
+        .then((response) => res.status(201).format({
             'application/xml': async function () {
                 var rss = parser.toJson(response.data)
                 const dateUTC = new Date().toUTCString()
@@ -123,8 +126,6 @@ exports.createFlux = async (req, res, next) => {
                         })
                         .catch(error => res.status(400).json({ error }))
                 }).catch(error => res.status(400).json({ error }))
-
-                res.status(201).json({ message: 'Objet créé !' })
                 console.log("POST 201: /api/rss/post/flux")
             },
         })).catch(error => res.status(400).json({ error }))

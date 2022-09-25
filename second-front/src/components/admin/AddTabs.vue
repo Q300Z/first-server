@@ -111,12 +111,12 @@ export default {
       (v) =>
         (v && v.length <= 10) || "Le nom doit avoir moins de 10 caractéres",
     ],
-    numberfield: 0,
+    numberfield: null,
     numberRule: [(v) => !!v || "Un ID est requis"],
     select: null,
   }),
   computed: {
-    ...vuex.mapGetters(["getTabNotif"]),
+    ...vuex.mapGetters("notif", ["getTabNotif"]),
   },
   methods: {
     Add() {
@@ -128,7 +128,9 @@ export default {
         this.aff = false;
         this.add = false;
         const tab = { id: this.numberfield, title: this.field };
-        this.$store.dispatch("api_add_tab_notif", tab);
+        this.$store.dispatch("notif/api_add_tab_notif", tab);
+        this.numberfield = null;
+        this.field = null;
       }
     },
     Remove() {
@@ -138,7 +140,8 @@ export default {
     ConfirmRemove() {
       this.aff = false;
       this.remove = false;
-      this.$store.dispatch("api_remove_tab_notif", this.select);
+      this.$store.dispatch("notif/api_remove_tab_notif", this.select);
+      this.select = null;
     },
     Back() {
       this.aff = false;

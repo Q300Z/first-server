@@ -28,14 +28,14 @@ export default {
   props: { id: { type: String, required: true } },
   computed: {
     Card() {
-      return this.$store.getters.getOne;
+      return this.$store.getters["cards/getOne"];
     },
   },
   beforeMount() {
-    this.$store.dispatch("api_get_card_one", this.id);
+    this.$store.dispatch("cards/api_get_card_one", this.id);
   },
   beforeUpdate() {
-    this.$store.dispatch("api_get_card_one", this.id);
+    this.$store.dispatch("cards/api_get_card_one", this.id);
   },
 };
 </script>

@@ -20,7 +20,7 @@
 import vuex from "vuex";
 export default {
   computed: {
-    ...vuex.mapGetters([
+    ...vuex.mapGetters("sneak", [
       "messageSneak",
       "activeSneak",
       "typeSneak",
@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     close() {
-      this.$store.dispatch("sneak", false);
+      this.$store.dispatch("sneak/sneak", false);
     },
   },
 };

@@ -102,26 +102,26 @@ export default {
           price: this.prix,
           userId: Math.random().toString(36).substr(2, 18),
         };
-        this.$store.dispatch("api_add_card", data);
+        this.$store.dispatch("cards/api_add_card", data);
         const sneak = {
           bool: true,
           text: "Success !",
           type: "success",
           icon: "mdi-check-circle",
         };
-        this.$store.dispatch("sneak", sneak);
-        this.dialog = false;
+        this.$store.dispatch("sneak/sneak", sneak);
+        //this.dialog = false;
       }
     },
     reset() {
       this.$refs.form.reset();
       const sneak = { bool: true, text: "Reset Form !", type: "error" };
-      this.$store.dispatch("sneak", sneak);
+      this.$store.dispatch("sneak/sneak", sneak);
     },
     resetValidation() {
       this.$refs.form.resetValidation();
       const sneak = { bool: true, text: "Reset Validation !", type: "warning" };
-      this.$store.dispatch("sneak", sneak);
+      this.$store.dispatch("sneak/sneak", sneak);
     },
   },
 };

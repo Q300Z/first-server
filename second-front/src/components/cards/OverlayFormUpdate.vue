@@ -106,20 +106,20 @@ export default {
   },
   computed: {
     getCards() {
-      return this.$store.getters.getCards;
+      return this.$store.getters["cards/getCards"];
     },
   },
   methods: {
     validate() {
       if (this.$refs.form.validate()) {
-        this.$store.dispatch("api_update_card", this.select);
+        this.$store.dispatch("cards/api_update_card", this.select);
         const sneak = {
           bool: true,
           text: "UPDATE : Success !",
           type: "success",
           icon: "mdi-check-circle",
         };
-        this.$store.dispatch("sneak", sneak);
+        this.$store.dispatch("sneak/sneak", sneak);
         this.dialog = false;
       }
     },
@@ -138,7 +138,7 @@ export default {
         type: "error",
         icon: "mdi-alert",
       };
-      this.$store.dispatch("sneak", sneak);
+      this.$store.dispatch("sneak/sneak", sneak);
     },
     resetValidation() {
       this.$refs.form.resetValidation();
@@ -148,7 +148,7 @@ export default {
         type: "warning",
         icon: "mdi-alert",
       };
-      this.$store.dispatch("sneak", sneak);
+      this.$store.dispatch("sneak/sneak", sneak);
     },
   },
 };

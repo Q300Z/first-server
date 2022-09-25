@@ -18,11 +18,11 @@ export default {
     //
   }),
   beforeCreate() {
-    this.$store.dispatch("api_get_cards");
-    this.$store.dispatch("api_get_notif");
-    this.$store.dispatch("api_get_tab_notif");
-    this.$store.dispatch("api_get_rss");
-    this.$store.dispatch("api_get_flux");
+    this.$store.dispatch("cards/api_get_cards");
+    //this.$store.dispatch("notif/api_get_notif");
+    this.$store.dispatch("notif/api_get_tab_notif");
+    this.$store.dispatch("rss/api_get_rss");
+    this.$store.dispatch("rss/api_get_flux");
     //console.log(this.$store.getters.getFluxRss);
   },
 };

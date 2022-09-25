@@ -1,5 +1,5 @@
 <template>
-  <div class="shop" id="start">
+  <div id="start" class="shop">
     <h1 class="d-flex justify-center">This is an shop page {{ countCards }}</h1>
     <div class="d-flex justify-center ma-10">
       <v-btn stacked color="primary" @click="refresh()"
@@ -28,15 +28,15 @@ export default {
   components: { ItemCards, OverlayFormPost, OverlayFormUpdate, SneakBarre },
   computed: {
     countCards() {
-      return this.$store.getters.getCount;
+      return store.getters["cards/getCount"];
     },
   },
-  beforeMount() {
-    this.$store.dispatch("api_get_cards");
-  },
+  /* beforeMount() {
+    store.dispatch("cards/api_get_cards");
+  }, */
   methods: {
     refresh() {
-      this.$store.dispatch("api_get_cards");
+      store.dispatch("cards/api_get_cards");
     },
   },
 };

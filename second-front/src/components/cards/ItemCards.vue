@@ -5,6 +5,7 @@
         v-model="page"
         :length="getCount"
         :total-visible="1"
+        :disabled="!getCount > 24"
       ></v-pagination>
     </div>
     <div class="compo">
@@ -83,24 +84,31 @@ export default {
   }),
   computed: {
     getCards() {
-      return this.$store.getters.getCards;
+      return this.$store.getters["cards/getCards"];
     },
     getCount() {
-      return Math.round(this.$store.getters.getCount / this.maxInPage);
+      var a = this.$store.getters["cards/getCount"];
+      if (isNaN(Math.round(a / this.maxInPage))) {
+        return 1;
+      } else {
+        return Math.round(a / this.maxInPage);
+      }
+
+      //return Math.round(this.$store.getters["cards/getCount"] / this.maxInPage);
     },
   },
   methods: {
     go(card) {
       var notif = { id: card._id, tab: 0, card: card };
       //console.log(notif);
-      this.$store.dispatch("api_add_notif", notif);
+      this.$store.dispatch("notif/api_add_notif", notif);
       const sneak = {
         bool: true,
         text: "Add successfully !",
         type: "success",
         icon: "mdi-check-circle",
       };
-      this.$store.dispatch("sneak", sneak);
+      this.$store.dispatch("sneak/sneak", sneak);
       //this.$router.push("/shop/item/" + card._id);
     },
     remove(id) {
@@ -110,8 +118,8 @@ export default {
         type: "success",
         icon: "mdi-check-circle",
       };
-      this.$store.dispatch("sneak", sneak);
-      this.$store.dispatch("api_remove_card", id);
+      this.$store.dispatch("sneak/sneak", sneak);
+      this.$store.dispatch("cards/api_remove_card", id);
     },
     next() {
       self.location.assign("#start");

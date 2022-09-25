@@ -17,15 +17,15 @@ export default {
   data: () => ({}),
   computed: {
     Rss() {
-      return this.$store.getters.getRss;
+      return this.$store.getters["rss/getRss"];
     },
     Flux() {
-      return this.$store.getters.getFluxRss;
+      return this.$store.getters["rss/getFluxRss"];
     },
   },
   methods: {
     refresh() {
-      this.$store.dispatch("api_get_rss");
+      this.$store.dispatch("rss/api_get_rss");
     },
   },
 };

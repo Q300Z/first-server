@@ -122,7 +122,7 @@ export default {
     select: null,
   }),
   computed: {
-    ...vuex.mapGetters(["getFluxRss"]),
+    ...vuex.mapGetters("rss", ["getFluxRss"]),
   },
   methods: {
     Add() {
@@ -134,7 +134,7 @@ export default {
         this.aff = false;
         this.add = false;
         const tab = { link: this.numberfield, title: this.field };
-        this.$store.dispatch("api_post_flux", tab);
+        this.$store.dispatch("rss/api_post_flux", tab);
       }
     },
     Remove() {
@@ -144,7 +144,7 @@ export default {
     ConfirmRemove() {
       this.aff = false;
       this.remove = false;
-      this.$store.dispatch("api_delete_flux", this.select);
+      this.$store.dispatch("rss/api_delete_flux", this.select);
     },
     Back() {
       this.aff = false;

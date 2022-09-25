@@ -22,7 +22,7 @@ export default {
   data: () => ({}),
   computed: {
     Flux() {
-      return this.$store.getters.getFluxRss;
+      return this.$store.getters["rss/getFluxRss"];
     },
   },
 };

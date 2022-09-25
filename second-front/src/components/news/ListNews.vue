@@ -21,17 +21,17 @@
         active-color="primary"
         :active="!item.read"
       >
-        <div @click="read(item)" class="item">
+        <div class="item" @click="read(item)">
           <v-list-item-title v-text="item.title"></v-list-item-title>
           <v-list-item-subtitle>{{ item.pubDate }}</v-list-item-subtitle>
         </div>
 
-        <v-tooltip activator="parent" location="start" v-if="item.read">
+        <v-tooltip v-if="item.read" activator="parent" location="start">
           Lue le {{ item.readDate }}
         </v-tooltip>
 
         <!-- <v-list-item-media v-html="item.description"> </v-list-item-media> -->
-        <template v-slot:append v-if="item.read">
+        <template v-if="item.read" #append>
           <v-btn variant="text" icon @click="unread(item)">
             <v-icon> mdi-eye </v-icon>
           </v-btn>
@@ -48,29 +48,30 @@ export default {
   data: () => ({}),
   computed: {
     Rss() {
-      return this.$store.getters.getRss
+      const a = this.$store.getters["rss/getRss"];
+      return a
         .filter((el) => el.flux == this.id)
         .sort()
         .reverse();
     },
     Flux() {
-      return this.$store.getters.getFluxRss;
+      return this.$store.getters["rss/getFluxRss"];
     },
   },
   methods: {
     read(item) {
-      console.log("READ");
+      //console.log("READ", item);
       if (item["read"] == false) {
         item["read"] = true;
-        this.$store.dispatch("api_put_rss", item);
+        this.$store.dispatch("rss/api_put_rss", item);
       }
-      window.open(item.link, "_blank");
+      //window.open(item.link, "_blank");
     },
     unread(item) {
-      console.log("UNREAD");
+      //console.log("UNREAD");
       if (item["read"] == true) {
         item["read"] = false;
-        this.$store.dispatch("api_put_rss", item);
+        this.$store.dispatch("rss/api_put_rss", item);
       }
     },
   },
